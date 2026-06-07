@@ -1,25 +1,27 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#inlcude <unistd.h>
+#include <unistd.h>
 float A, B, C;
 
-float cubeWidth = 10;
+float cubeWidth = 40;
 int width = 160, height = 44;
 float zBuffer[160 * 44];
 char buffer[160 * 44];
 int backgroundASCIICode = ' ';
-float distanceFromCam = 60;
-
+float distanceFromCam = 100;
+float K1 = 40;
+float horizontalOffset;
 float incrementSpeed = 0.6;
 
 float x, y, z;
 float ooz;
 int xp, yp;
+int idx;
 
 float calculateX(int i, int j, int k){
     return j * sin(A) * sin(B) * sin(C) - k * cos(A) * sin(B) * cos(C) +
-           j * cos(A) * sin(C) + k sin(A) * sin(A) * sin(C) + i * cos(B)  * cos(C);
+           j * cos(A) * sin(C) + k * sin(A) * sin(C) + i * cos(B)  * cos(C);
 }
 float calculateY(int i, int j, int k){
     return j * cos(A) * cos(C) + k * sin(A) * cos(C) - 
@@ -52,16 +54,32 @@ void calculateForSurface(float cubeX, float cubeY, float cubeZ, int ch){
 }
 
 int main(){
-    printf("\x1b[2J")
+    printf("\x1b[2J");
     while(1) {
-        memset(buffer, backgroundASCIICode, widht * height);
+        memset(buffer, backgroundASCIICode, width * height);
         memset(zBuffer, 0, width * height * 4);
-        for(float cubeX = - cubeWidth; cubeX < cubeWidth; cubeX += incrementSpeed){
-            for(float cubeY = - cubeWidth; cubeY < cubeWidth; cubeY += incrementSpeed){
-                calculateForSurface(cubeX, cubeY, -cubeWidth, '#');
+        cubeWidth = 20;
+        horizontalOffset = -2 * cubeWidth;
+        for(float cubeX = -cubeWidth; cubeX < cubeWidth; cubeX += incrementSpeed){
+            for(float cubeY = -cubeWidth; cubeY < cubeWidth; 
+                    cubeY += incrementSpeed){
+                calculateForSurface(cubeX, cubeY, -cubeWidth, '@');
+                calculateForSurface(cubeWidth, cubeY, cubeX, '$');
+                calculateForSurface(-cubeWidth, cubeY, -cubeX, '~');
+                calculateForSurface(-cubeX, cubeY, cubeWidth, '#');
+                calculateForSurface(cubeX, -cubeWidth, -cubeY, ';');
+                calculateForSurface(cubeX, cubeWidth, cubeY, '+');
+
             }
         }
-        printf()
+        printf("\x1b[H");
+        for(int k =0; k < width * height; k++){
+            putchar(k % width ? buffer[k] : 10);
+        }
+        
+        A += 0.005;
+        B += 0.005;
+        usleep(1000);
     }
     return 0;
 }
