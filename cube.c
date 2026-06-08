@@ -4,7 +4,7 @@
 #include <unistd.h>
 float A, B, C;
 
-float cubeWidth = 40;
+float cubeWidth = 20;
 int width = 160, height = 44;
 float zBuffer[160 * 44];
 char buffer[160 * 44];
@@ -20,7 +20,7 @@ int xp, yp;
 int idx;
 
 float calculateX(int i, int j, int k){
-    return j * sin(A) * sin(B) * sin(C) - k * cos(A) * sin(B) * cos(C) +
+    return j * sin(A) * sin(B) * cos(C) - k * cos(A) * sin(B) * cos(C) +
            j * cos(A) * sin(C) + k * sin(A) * sin(C) + i * cos(B)  * cos(C);
 }
 float calculateY(int i, int j, int k){
