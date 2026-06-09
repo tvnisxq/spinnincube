@@ -8,4 +8,4 @@
 
 
 
-![Spinning Cube Demo](demo.mp4)
+![Spinning Cube Demo](demo.gif)
